@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: Manh2004
+    url: jdbc:mysql://localhost:3306/thuvien
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    #      none, updated, auto-update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        enable_lazy_load_no_trans: true
+        format_sql: true
+    show-sql: true
