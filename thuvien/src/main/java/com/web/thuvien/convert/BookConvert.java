@@ -5,6 +5,8 @@ import com.web.thuvien.model.entity.FileEntity;
 import com.web.thuvien.model.entity.ImageEntity;
 import com.web.thuvien.model.enums.TypeEnum;
 import com.web.thuvien.model.response.BookResponse;
+import com.web.thuvien.model.response.FileResponse;
+import com.web.thuvien.model.response.ImageResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,11 @@ public class BookConvert {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private FileConvert fileConvert;
+
+    @Autowired
+    private ImageConvert imageConvert;
 
     public BookResponse convertToBookResponse(BookEntity bookEntity) {
         BookResponse bookResponse = modelMapper.map(bookEntity, BookResponse.class);
@@ -31,17 +38,17 @@ public class BookConvert {
         }
         bookResponse.setTypes(types);
         // images
-        List<String> images = new ArrayList<>();
+        List<ImageResponse> images = new ArrayList<>();
         List<ImageEntity> imageEntities = bookEntity.getImageEntities();
         for(ImageEntity x: imageEntities){
-            images.add("https://res.cloudinary.com/djuq2enmy/image/upload/" + x.getFileId());
+            images.add(imageConvert.convertToImageResponse(x));
         }
         bookResponse.setImages(images);
         // files
-        List<String> files = new ArrayList<>();
+        List<FileResponse> files = new ArrayList<>();
         List<FileEntity> fileEntities = bookEntity.getFileEntities();
         for(FileEntity x: fileEntities){
-            files.add("https://res.cloudinary.com/djuq2enmy/raw/upload" + x.getFileId());
+            files.add(fileConvert.convertToFileResponse(x));
         }
         bookResponse.setFiles(files);
         return bookResponse;

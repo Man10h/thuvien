@@ -28,4 +28,5 @@ public class ImageEntity {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
+
 }

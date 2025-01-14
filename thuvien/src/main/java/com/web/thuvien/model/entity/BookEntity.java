@@ -5,13 +5,13 @@ import lombok.*;
 
 import java.util.List;
 
-@Entity
-@Table(name = "book")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "book")
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,5 @@ public class BookEntity {
 
     @OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     List<FileEntity> fileEntities;
+
 }

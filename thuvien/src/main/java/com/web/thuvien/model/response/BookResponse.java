@@ -16,6 +16,7 @@ public class BookResponse {
     private List<String> types;
     private String description;
     private Long likeCount;
-    private List<String> files;
-    private List<String> images;
+    private List<FileResponse> files;
+    private List<ImageResponse> images;
+
 }

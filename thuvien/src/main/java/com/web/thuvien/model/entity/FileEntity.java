@@ -3,13 +3,13 @@ package com.web.thuvien.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "file")
-@Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "file")
 public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class FileEntity {
     private String fileName;
 
     @Column(name = "file_id")
-    private Long fileId;
+    private String fileId;
 
     @Column(name = "file_url")
     private String fileUrl;
@@ -27,4 +27,5 @@ public class FileEntity {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
+
 }
