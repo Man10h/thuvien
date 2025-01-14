@@ -1,6 +1,8 @@
 package com.web.thuvien.controller;
 
 import com.web.thuvien.model.dto.BookDTO;
+import com.web.thuvien.model.dto.FileDTO;
+import com.web.thuvien.model.dto.ImageDTO;
 import com.web.thuvien.model.response.FileResponse;
 import com.web.thuvien.model.response.ImageResponse;
 import com.web.thuvien.service.BookService;
@@ -50,4 +52,33 @@ public class AdminController {
         return ResponseEntity.ok(fileService.getFiles(bookId));
     }
 
+    @GetMapping("/image")
+    public ResponseEntity<ImageResponse> getBookImages(@RequestParam Long imageId){
+        return ResponseEntity.ok(imageService.getImageById(imageId));
+    }
+
+    @GetMapping("/file")
+    public ResponseEntity<FileResponse> getBookFiles(@RequestParam Long fileId){
+        return ResponseEntity.ok(fileService.getFileById(fileId));
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<String> addImage(@ModelAttribute ImageDTO imageDTO){
+        return ResponseEntity.ok(imageService.addImage(imageDTO));
+    }
+
+    @PostMapping("/file")
+    public ResponseEntity<String> addFile(@ModelAttribute FileDTO fileDTO){
+        return ResponseEntity.ok(fileService.addFile(fileDTO));
+    }
+
+    @DeleteMapping("/image/{imageId}")
+    public ResponseEntity<String> deleteImage(@PathVariable Long imageId){
+        return ResponseEntity.ok(imageService.deleteImage(imageId));
+    }
+
+    @DeleteMapping("/file/{fileId}")
+    public ResponseEntity<String> deleteFile(@PathVariable Long fileId){
+        return ResponseEntity.ok(fileService.deleteFile(fileId));
+    }
 }
