@@ -33,9 +33,12 @@ public class BookEntity {
     private String description;
 
     @OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    List<ImageEntity> imageEntities;
+    private List<ImageEntity> imageEntities;
 
     @OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    List<FileEntity> fileEntities;
+    private List<FileEntity> fileEntities;
+
+    @ManyToMany(mappedBy = "bookEntities")
+    private List<UserEntity> userEntities;
 
 }

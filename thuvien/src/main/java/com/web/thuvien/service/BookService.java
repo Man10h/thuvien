@@ -1,6 +1,7 @@
 package com.web.thuvien.service;
 
 import com.web.thuvien.model.dto.BookDTO;
+import com.web.thuvien.model.dto.MyFavouriteDTO;
 import com.web.thuvien.model.response.BookResponse;
 import com.web.thuvien.model.response.FileResponse;
 import com.web.thuvien.model.response.ImageResponse;
@@ -15,5 +16,7 @@ public interface BookService {
     public String editBook(BookDTO bookDTO);
     public String deleteBook(Long id);
 
-
+    public List<BookResponse> findByUserId(Long userId);
+    public String addBookToMyFavourite(MyFavouriteDTO myFavouriteDTO);
+    public String deleteFromMyFavourite(MyFavouriteDTO myFavouriteDTO);
 }

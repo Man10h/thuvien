@@ -4,14 +4,18 @@ import com.web.thuvien.convert.BookConvert;
 import com.web.thuvien.convert.FileConvert;
 import com.web.thuvien.convert.ImageConvert;
 import com.web.thuvien.exception.ex.BookNotFoundException;
+import com.web.thuvien.exception.ex.UserNotFoundException;
 import com.web.thuvien.model.dto.BookDTO;
+import com.web.thuvien.model.dto.MyFavouriteDTO;
 import com.web.thuvien.model.entity.BookEntity;
 import com.web.thuvien.model.entity.FileEntity;
 import com.web.thuvien.model.entity.ImageEntity;
+import com.web.thuvien.model.entity.UserEntity;
 import com.web.thuvien.model.response.BookResponse;
 import com.web.thuvien.repository.BookRepository;
 import com.web.thuvien.repository.FileRepository;
 import com.web.thuvien.repository.ImageRepository;
+import com.web.thuvien.repository.UserRepository;
 import com.web.thuvien.service.BookService;
 import com.web.thuvien.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private FileRepository fileRepository;
@@ -146,6 +153,64 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
         return "Delete book successfully";
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookResponse> findByUserId(Long userId) {
+        Optional<UserEntity> optional = userRepository.findById(userId);
+        if(optional.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+        UserEntity userEntity = optional.get();
+        List<BookEntity> bookEntities = userEntity.getBookEntities();
+        if(bookEntities.isEmpty()){
+            return null;
+        }
+        return bookEntities.stream().map(it -> bookConvert.convertToBookResponse(it)).toList();
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
+    public String addBookToMyFavourite(MyFavouriteDTO myFavouriteDTO) {
+        if(myFavouriteDTO.getBookId() == null || myFavouriteDTO.getUserId() == null){
+            return null;
+        }
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(myFavouriteDTO.getUserId());
+        if(optionalUserEntity.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+        Optional<BookEntity> optionalBookEntity = bookRepository.findById(myFavouriteDTO.getBookId());
+        if(optionalBookEntity.isEmpty()){
+            throw new BookNotFoundException("Book not found");
+        }
+        BookEntity bookEntity = optionalBookEntity.get();
+        UserEntity userEntity = optionalUserEntity.get();
+        userEntity.getBookEntities().add(bookEntity);
+        bookEntity.getUserEntities().add(userEntity);
+        bookRepository.save(bookEntity);
+        userRepository.save(userEntity);
+        return "Add to MyFavourite successfully";
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
+    public String deleteFromMyFavourite(MyFavouriteDTO myFavouriteDTO) {
+        if(myFavouriteDTO.getBookId() == null || myFavouriteDTO.getUserId() == null){
+            return null;
+        }
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(myFavouriteDTO.getUserId());
+        if(optionalUserEntity.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+        Optional<BookEntity> optionalBookEntity = bookRepository.findById(myFavouriteDTO.getBookId());
+        if(optionalBookEntity.isEmpty()){
+            throw new BookNotFoundException("Book not found");
+        }
+        BookEntity bookEntity = optionalBookEntity.get();
+        UserEntity userEntity = optionalUserEntity.get();
+        userEntity.getBookEntities().remove(bookEntity);
+        bookEntity.getUserEntities().remove(userEntity);
+        bookRepository.save(bookEntity);
+        userRepository.save(userEntity);
+        return "Delete from MyFavourite successfully";
     }
 
 }
