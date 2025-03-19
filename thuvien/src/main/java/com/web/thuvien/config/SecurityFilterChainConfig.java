@@ -1,6 +1,8 @@
 package com.web.thuvien.config;
 
+import com.web.thuvien.service.impl.CustomOAuth2UserDetail;
 import com.web.thuvien.util.MyCustomSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +16,9 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityFilterChainConfig {
+
+    @Autowired
+    private CustomOAuth2UserDetail customOAuth2UserDetail;
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -31,7 +36,7 @@ public class SecurityFilterChainConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/home/**").permitAll()
                         .anyRequest().authenticated()
@@ -41,6 +46,7 @@ public class SecurityFilterChainConfig {
                         .successHandler(myCustomSuccessHandler)
                         .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint.baseUri("/login/oauth2/code/*"))
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.baseUri("/login/oauth2/authorization"))
+                        .userInfoEndpoint(userinfo -> userinfo.userService(customOAuth2UserDetail))
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt

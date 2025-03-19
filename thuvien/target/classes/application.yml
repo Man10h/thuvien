@@ -1,11 +1,8 @@
-server:
-  port: 8080
-
 spring:
   datasource:
     username: root
     password: Manh2004
-    url: jdbc:mysql://localhost:3306/thuvien
+    url: jdbc:mysql://host.docker.internal:3306/thuvien
 
   jpa:
     hibernate:
@@ -23,8 +20,8 @@ spring:
       client:
         registration:
           google:
-            client-id: {}
-            client-secret: {}
+            client-id: 466972742513-1bklu1a4qjd0e9179m9doi8d1kc48ig4.apps.googleusercontent.com
+            client-secret: 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
             authorization-grant-type:
               - authorization_code
               - password
@@ -42,7 +39,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: nguyenmanhlc10@gmail.com
-    password: {}
+    password: bwph iddz qfvi kggp
     protocol: smtp
     properties:
       mail:
@@ -53,7 +50,7 @@ spring:
             required: true
 
 jwt:
-  secretKey: {}
+  secretKey: ueKZ88pnk6JJSaiu8IqMPURPjcw04HF4gI/MiyH1cbA=
 
 logging:
   level:
